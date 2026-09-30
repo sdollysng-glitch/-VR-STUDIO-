@@ -1,0 +1,2949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0, user-scalable=no">
+
+<title>VR Studio</title>
+
+<style>
+/* =========================================================
+   VR STUDIO
+   Recreated Front-End Version
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #0B0E17;
+    color: white;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* =========================================================
+   SPLASH SCREEN
+   ========================================================= */
+
+#splashScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #25394b 0%,
+            #101923 45%,
+            #0B0E17 100%
+        );
+
+    transition: opacity 0.6s ease;
+}
+
+.splashContent {
+    text-align: center;
+    width: 90%;
+    max-width: 700px;
+}
+
+.splashLogo {
+    width: 100%;
+    max-width: 620px;
+    max-height: 65vh;
+    object-fit: contain;
+
+    filter:
+        drop-shadow(0 0 15px rgba(0, 190, 255, .4))
+        drop-shadow(0 0 40px rgba(0, 130, 255, .2));
+}
+
+.splashText {
+    margin-top: 15px;
+
+    color: #6DE4FF;
+
+    font-size: 13px;
+    font-weight: bold;
+
+    letter-spacing: 4px;
+}
+
+/* =========================================================
+   AUTH SCREEN
+   ========================================================= */
+
+#authScreen {
+    min-height: 100vh;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    padding: 25px;
+
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(0, 157, 255, .16),
+            transparent 40%
+        ),
+        #0B0E17;
+}
+
+.authBox {
+    width: 100%;
+    max-width: 460px;
+
+    padding: 28px;
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(22, 35, 51, .97),
+            rgba(9, 15, 24, .98)
+        );
+
+    border: 1px solid rgba(65, 213, 255, .22);
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, .5),
+        0 0 35px rgba(0, 174, 255, .08);
+}
+
+.authLogo {
+    display: block;
+
+    width: 190px;
+    height: 130px;
+
+    object-fit: contain;
+
+    margin: 0 auto 15px;
+}
+
+.authTitle {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+.authSubtitle {
+    text-align: center;
+    color: #91A5B8;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 22px;
+}
+
+/* AUTH TABS */
+
+.authTabs {
+    display: flex;
+    gap: 7px;
+
+    background: #08121D;
+
+    padding: 5px;
+
+    border-radius: 13px;
+
+    margin-bottom: 18px;
+}
+
+.authTabs button {
+    flex: 1;
+
+    padding: 11px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: transparent;
+    color: #8196A9;
+}
+
+.authTabs button.active {
+    background: #16344A;
+    color: white;
+}
+
+/* INPUTS */
+
+.inputGroup {
+    margin-bottom: 14px;
+}
+
+.inputGroup label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 12px;
+    color: #9BB0C2;
+}
+
+.inputGroup input,
+.inputGroup textarea,
+.inputGroup select {
+    width: 100%;
+
+    padding: 13px;
+
+    color: white;
+    background: #07111C;
+
+    border: 1px solid rgba(140, 170, 190, .2);
+
+    border-radius: 12px;
+
+    outline: none;
+}
+
+.inputGroup input:focus,
+.inputGroup textarea:focus {
+    border-color: #38CFFF;
+
+    box-shadow:
+        0 0 0 3px rgba(56, 207, 255, .08);
+}
+
+/* BUTTONS */
+
+.mainButton {
+    width: 100%;
+
+    padding: 13px;
+
+    border: none;
+    border-radius: 12px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #087EC4,
+            #174DD4
+        );
+
+    font-weight: bold;
+
+    transition: .2s;
+}
+
+.mainButton:hover {
+    transform: translateY(-1px);
+}
+
+.secondaryButton {
+    width: 100%;
+
+    padding: 12px;
+
+    margin-top: 9px;
+
+    border-radius: 12px;
+
+    border: 1px solid rgba(75, 213, 255, .2);
+
+    color: white;
+
+    background: #10202F;
+}
+
+/* =========================================================
+   ADMIN LOGIN
+   ========================================================= */
+
+.adminPanel {
+    margin-top: 18px;
+
+    padding: 15px;
+
+    border-radius: 15px;
+
+    background: rgba(10, 26, 41, .75);
+
+    border: 1px dashed rgba(63, 211, 255, .3);
+}
+
+.adminHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.adminTitle {
+    font-weight: bold;
+}
+
+.adminDescription {
+    color: #8198AA;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+/* SWITCH */
+
+.switch {
+    position: relative;
+
+    width: 46px;
+    height: 25px;
+}
+
+.switch input {
+    display: none;
+}
+
+.switchSlider {
+    position: absolute;
+    inset: 0;
+
+    background: #283744;
+
+    border-radius: 30px;
+}
+
+.switchSlider::before {
+    content: "";
+
+    position: absolute;
+
+    width: 19px;
+    height: 19px;
+
+    left: 3px;
+    top: 3px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    transition: .2s;
+}
+
+.switch input:checked + .switchSlider {
+    background: #168AC7;
+}
+
+.switch input:checked + .switchSlider::before {
+    transform: translateX(21px);
+}
+
+#adminPasswordArea {
+    margin-top: 15px;
+}
+
+/* =========================================================
+   MAIN APP
+   ========================================================= */
+
+#mainApp {
+    display: none;
+
+    min-height: 100vh;
+
+    padding-bottom: 82px;
+}
+
+/* TOP BAR */
+
+.topBar {
+    position: sticky;
+    top: 0;
+
+    z-index: 100;
+
+    height: 70px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 8px 16px;
+
+    background: rgba(8, 13, 21, .9);
+
+    backdrop-filter: blur(16px);
+
+    border-bottom: 1px solid rgba(65, 213, 255, .18);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.brand img {
+    width: 48px;
+    height: 48px;
+
+    object-fit: contain;
+}
+
+.roleBadge {
+    padding: 8px 11px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+    font-weight: bold;
+
+    color: #80E7FF;
+
+    background: #0D2130;
+
+    border: 1px solid rgba(66, 215, 255, .2);
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.content {
+    width: min(1100px, 94%);
+    margin: auto;
+
+    padding: 25px 0;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.card {
+    padding: 21px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(21, 33, 49, .96),
+            rgba(10, 17, 27, .96)
+        );
+
+    border: 1px solid rgba(65, 213, 255, .17);
+
+    box-shadow: 0 15px 45px rgba(0, 0, 0, .2);
+
+    margin-bottom: 17px;
+}
+
+.hero {
+    padding: 30px;
+}
+
+.hero h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    color: #8EA4B6;
+    line-height: 1.6;
+}
+
+.sectionTitle {
+    font-size: 21px;
+    margin-bottom: 8px;
+}
+
+.sectionDescription {
+    color: #879DAF;
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+
+/* =========================================================
+   GAME CARDS
+   ========================================================= */
+
+.gameCard {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 15px;
+
+    margin-top: 10px;
+
+    border-radius: 14px;
+
+    background: #0B1722;
+
+    border: 1px solid rgba(140, 170, 190, .12);
+}
+
+.gameInfo h3 {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.gameInfo p {
+    color: #7F94A6;
+    font-size: 12px;
+}
+
+.gameActions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.badge {
+    padding: 5px 8px;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+
+    background: #12354A;
+    color: #7DE5FF;
+}
+
+.smallButton {
+    padding: 9px 12px;
+
+    border-radius: 10px;
+
+    border: 1px solid rgba(60, 210, 255, .2);
+
+    background: #102B3D;
+
+    color: white;
+
+    font-size: 11px;
+}
+
+.deleteButton {
+    background: #351820;
+    border-color: rgba(255, 90, 110, .25);
+}
+
+/* =========================================================
+   GRID
+   ========================================================= */
+
+.grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(240px, 1fr)
+        );
+
+    gap: 16px;
+}
+
+/* =========================================================
+   COMMUNITY
+   ========================================================= */
+
+.chatBox {
+    height: 300px;
+
+    overflow-y: auto;
+
+    padding: 10px;
+
+    background: #07111B;
+
+    border-radius: 14px;
+
+    border: 1px solid rgba(140, 170, 190, .12);
+}
+
+.chatMessage {
+    padding: 9px 11px;
+
+    margin-bottom: 8px;
+
+    background: #102130;
+
+    border-radius: 12px;
+}
+
+.chatMessage strong {
+    font-size: 12px;
+}
+
+.chatMessage small {
+    color: #71889A;
+    margin-left: 5px;
+}
+
+.chatMessage div {
+    margin-top: 4px;
+    font-size: 13px;
+}
+
+.chatInputRow {
+    display: flex;
+    gap: 8px;
+
+    margin-top: 10px;
+}
+
+.chatInputRow input {
+    flex: 1;
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    border: 1px solid rgba(140, 170, 190, .18);
+
+    background: #07111B;
+
+    color: white;
+
+    outline: none;
+}
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+.profileRow {
+    padding: 13px 0;
+
+    border-bottom: 1px solid rgba(140, 170, 190, .1);
+}
+
+.profileRow span {
+    display: block;
+
+    color: #8197A9;
+
+    font-size: 11px;
+
+    margin-bottom: 4px;
+}
+
+/* =========================================================
+   ADMIN DASHBOARD
+   ========================================================= */
+
+.adminOnly {
+    display: none;
+}
+
+body.adminMode .adminOnly {
+    display: block;
+}
+
+.adminSuccess {
+    color: #59E39A;
+}
+
+/* =========================================================
+   BOTTOM NAVIGATION
+   ========================================================= */
+
+.bottomNav {
+    position: fixed;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 500;
+
+    height: 75px;
+
+    background: rgba(7, 11, 18, .94);
+
+    backdrop-filter: blur(18px);
+
+    border-top: 1px solid rgba(65, 213, 255, .17);
+}
+
+.navItems {
+    width: min(760px, 100%);
+    height: 100%;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+}
+
+.navButton {
+    border: none;
+
+    background: transparent;
+
+    color: #728899;
+
+    font-size: 10px;
+}
+
+.navIcon {
+    display: block;
+
+    font-size: 19px;
+
+    margin-bottom: 4px;
+}
+
+.navButton.active {
+    color: #5DE0FF;
+}
+
+/* =========================================================
+   GAME LAUNCHER
+   ========================================================= */
+
+#gameLauncher {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9000;
+
+    display: none;
+
+    flex-direction: column;
+
+    background: #000;
+}
+
+.launcherTop {
+    height: 55px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 8px 12px;
+
+    background: #0B1420;
+
+    border-bottom: 1px solid rgba(65, 213, 255, .2);
+}
+
+.gameFrame {
+    flex: 1;
+
+    width: 100%;
+
+    border: none;
+
+    background: white;
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.toast {
+    position: fixed;
+
+    right: 18px;
+    bottom: 90px;
+
+    z-index: 99999;
+
+    padding: 12px 15px;
+
+    border-radius: 12px;
+
+    background: #132637;
+
+    border: 1px solid rgba(65, 213, 255, .25);
+
+    box-shadow: 0 12px 30px rgba(0,0,0,.5);
+
+    font-size: 13px;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media(max-width:600px) {
+
+    .authBox {
+        padding: 21px;
+    }
+
+    .hero {
+        padding: 22px;
+    }
+
+    .hero h1 {
+        font-size: 25px;
+    }
+
+    .gameCard {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .gameActions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .chatInputRow {
+        flex-direction: column;
+    }
+
+    .chatInputRow button {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =======================================================
+     SPLASH SCREEN
+     ======================================================= -->
+
+<div id="splashScreen">
+
+    <div class="splashContent">
+
+        <!-- Keep vr_studio_logo.png in the same folder -->
+        <img
+            src="vr_studio_logo.png"
+            class="splashLogo"
+            alt="VR Studio"
+        >
+
+        <div class="splashText">
+            IMMERSIVE VIRTUAL REALITY
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     AUTHENTICATION
+     ======================================================= -->
+
+<section id="authScreen">
+
+    <div class="authBox">
+
+        <img
+            src="vr_studio_logo.png"
+            class="authLogo"
+            alt="VR Studio"
+        >
+
+        <h1 class="authTitle" id="authTitle">
+            Create Your Account
+        </h1>
+
+        <p class="authSubtitle">
+            Welcome to VR Studio. Create an account
+            to enter the arcade.
+        </p>
+
+
+        <!-- AUTH TABS -->
+
+        <div class="authTabs">
+
+            <button
+                id="signupTab"
+                class="active"
+                onclick="changeAuthMode('signup')">
+
+                Sign Up
+
+            </button>
+
+            <button
+                id="loginTab"
+                onclick="changeAuthMode('login')">
+
+                Log In
+
+            </button>
+
+        </div>
+
+
+        <!-- EMAIL -->
+
+        <div class="inputGroup">
+
+            <label>Email</label>
+
+            <input
+                id="emailInput"
+                type="email"
+                placeholder="you@example.com"
+            >
+
+        </div>
+
+
+        <!-- PASSWORD -->
+
+        <div class="inputGroup">
+
+            <label>Password</label>
+
+            <input
+                id="passwordInput"
+                type="password"
+                placeholder="Create a password"
+            >
+
+        </div>
+
+
+        <button
+            class="mainButton"
+            id="accountButton"
+            onclick="handleAccount()">
+
+            Create Account
+
+        </button>
+
+
+        <!-- GOOGLE -->
+
+        <button
+            class="secondaryButton"
+            onclick="googleLogin()">
+
+            Continue with Google
+
+        </button>
+
+
+        <!-- GUEST -->
+
+        <button
+            class="secondaryButton"
+            onclick="guestLogin()">
+
+            Continue as Guest
+
+        </button>
+
+
+        <!-- ADMIN -->
+
+        <div class="adminPanel">
+
+            <div class="adminHeader">
+
+                <div>
+
+                    <div class="adminTitle">
+                        👑 Owner / Admin
+                    </div>
+
+                    <div class="adminDescription">
+                        Owner access is required to publish
+                        and manage games.
+                    </div>
+
+                </div>
+
+
+                <label class="switch">
+
+                    <input
+                        type="checkbox"
+                        id="adminSwitch"
+                        onchange="toggleAdminPassword()"
+                    >
+
+                    <span class="switchSlider"></span>
+
+                </label>
+
+            </div>
+
+
+            <div
+                id="adminPasswordArea"
+                style="display:none;">
+
+                <div
+                    class="inputGroup"
+                    style="margin-top:15px;">
+
+                    <label>
+                        Owner / Admin Password
+                    </label>
+
+                    <input
+                        id="adminPasswordInput"
+                        type="password"
+                        placeholder="Enter admin password"
+                    >
+
+                </div>
+
+
+                <button
+                    class="mainButton"
+                    onclick="verifyAdmin()">
+
+                    Enter Owner / Admin Mode
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     MAIN APPLICATION
+     ======================================================= -->
+
+<div id="mainApp">
+
+
+    <!-- TOP BAR -->
+
+    <header class="topBar">
+
+        <div class="brand">
+
+            <img
+                src="vr_studio_logo.png"
+                alt="VR Studio"
+            >
+
+            <span>
+                VR STUDIO
+            </span>
+
+        </div>
+
+
+        <div
+            class="roleBadge"
+            id="roleBadge">
+
+            PLAYER MODE
+
+        </div>
+
+    </header>
+
+
+    <!-- CONTENT -->
+
+    <main class="content">
+
+
+        <!-- =================================================
+             ARCADE
+             ================================================= -->
+
+        <section
+            id="arcadePage"
+            class="page active">
+
+            <div class="card hero">
+
+                <h1>
+                    Welcome to VR Studio
+                </h1>
+
+                <p>
+                    Play games, explore featured projects,
+                    join the community and send feedback.
+                </p>
+
+                <div
+                    class="adminOnly"
+                    style="margin-top:18px;">
+
+                    <button
+                        class="mainButton"
+                        style="max-width:280px;"
+                        onclick="openPage('adminPage')">
+
+                        👑 Open Admin Dashboard
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h2 class="sectionTitle">
+                    🎮 Arcade
+                </h2>
+
+                <p class="sectionDescription">
+                    Published VR Studio games.
+                </p>
+
+                <div id="gameList"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FEATURED
+             ================================================= -->
+
+        <section
+            id="featuredPage"
+            class="page">
+
+            <div class="card">
+
+                <h2 class="sectionTitle">
+                    ⭐ Featured
+                </h2>
+
+                <p class="sectionDescription">
+                    Games selected by VR Studio.
+                </p>
+
+                <div id="featuredList"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             COMMUNITY
+             ================================================= -->
+
+        <section
+            id="communityPage"
+            class="page">
+
+            <div class="card">
+
+                <h2 class="sectionTitle">
+                    💬 Community Lounge
+                </h2>
+
+                <p class="sectionDescription">
+                    Talk with other players and share feedback.
+                </p>
+
+
+                <div
+                    id="chatMessages"
+                    class="chatBox">
+                </div>
+
+
+                <div class="chatInputRow">
+
+                    <input
+                        id="chatInput"
+                        placeholder="Write a message..."
+                        onkeydown="
+                        if(event.key==='Enter')
+                        sendMessage();
+                        "
+                    >
+
+                    <button
+                        class="smallButton"
+                        onclick="sendMessage()">
+
+                        Send
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SUPPORT
+             ================================================= -->
+
+        <section
+            id="supportPage"
+            class="page">
+
+            <div class="card">
+
+                <h2 class="sectionTitle">
+                    🛠️ Support
+                </h2>
+
+                <p class="sectionDescription">
+                    Report bugs, complaints or suggestions.
+                </p>
+
+
+                <div class="inputGroup">
+
+                    <label>
+                        Request Type
+                    </label>
+
+                    <select id="supportType">
+
+                        <option>
+                            Bug Report
+                        </option>
+
+                        <option>
+                            Complaint
+                        </option>
+
+                        <option>
+                            Suggestion
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="inputGroup">
+
+                    <label>
+                        Message
+                    </label>
+
+                    <textarea
+                        id="supportMessage"
+                        placeholder="Describe your issue...">
+                    </textarea>
+
+                </div>
+
+
+                <button
+                    class="mainButton"
+                    onclick="sendSupport()">
+
+                    Send Support Request
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PROFILE
+             ================================================= -->
+
+        <section
+            id="profilePage"
+            class="page">
+
+            <div class="card">
+
+                <h2 class="sectionTitle">
+                    👤 Profile
+                </h2>
+
+
+                <div
+                    id="profileData">
+                </div>
+
+
+                <button
+                    class="secondaryButton"
+                    onclick="logout()">
+
+                    Log Out
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ADMIN DASHBOARD
+             ================================================= -->
+
+        <section
+            id="adminPage"
+            class="page adminOnly">
+
+            <div class="card">
+
+                <h2 class="sectionTitle">
+                    👑 Owner / Admin Dashboard
+                </h2>
+
+                <p class="sectionDescription">
+                    These controls are only available
+                    after successful owner verification.
+                </p>
+
+            </div>
+
+
+            <div class="grid">
+
+
+                <!-- PUBLISH GAME -->
+
+                <div class="card">
+
+                    <h2>
+                        🚀 Publish Web Game
+                    </h2>
+
+                    <br>
+
+                    <div class="inputGroup">
+
+                        <label>
+                            Game Name
+                        </label>
+
+                        <input
+                            id="gameName"
+                            placeholder="City Rush"
+                        >
+
+                    </div>
+
+
+                    <div class="inputGroup">
+
+                        <label>
+                            Game URL
+                        </label>
+
+                        <input
+                            id="gameURL"
+                            placeholder="https://example.com/game"
+                        >
+
+                    </div>
+
+
+                    <div class="inputGroup">
+
+                        <label>
+                            Description
+                        </label>
+
+                        <textarea
+                            id="gameDescription"
+                            placeholder="Describe your game...">
+                        </textarea>
+
+                    </div>
+
+
+                    <button
+                        class="mainButton"
+                        onclick="publishGame()">
+
+                        Publish Game
+
+                    </button>
+
+                </div>
+
+
+                <!-- UPCOMING PROJECT -->
+
+                <div class="card">
+
+                    <h2>
+                        📅 Upcoming Project
+                    </h2>
+
+                    <br>
+
+                    <div class="inputGroup">
+
+                        <label>
+                            Project Name
+                        </label>
+
+                        <input
+                            id="projectName"
+                            placeholder="New VR Studio Project"
+                        >
+
+                    </div>
+
+
+                    <div class="inputGroup">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <input
+                            id="projectStatus"
+                            placeholder="In Development"
+                        >
+
+                    </div>
+
+
+                    <button
+                        class="mainButton"
+                        onclick="saveProject()">
+
+                        Save Project
+
+                    </button>
+
+
+                    <div
+                        id="projectList"
+                        style="margin-top:15px;">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ADMIN POWER -->
+
+            <div class="card">
+
+                <h2>
+                    Admin Permissions
+                </h2>
+
+                <br>
+
+                <p style="
+                    color:#7F98AA;
+                    line-height:1.8;
+                    font-size:13px;
+                ">
+
+                    ✓ Publish games<br>
+                    ✓ Remove games<br>
+                    ✓ Manage featured games<br>
+                    ✓ Manage upcoming projects<br>
+                    ✓ Review support requests<br>
+                    ✓ Owner dashboard access<br>
+                    ✓ Public players remain view-only
+
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         BOTTOM NAVIGATION
+         ===================================================== -->
+
+    <nav class="bottomNav">
+
+        <div class="navItems">
+
+            <button
+                class="navButton active"
+                data-page="arcadePage"
+                onclick="openPage('arcadePage')">
+
+                <span class="navIcon">
+                    🎮
+                </span>
+
+                Arcade
+
+            </button>
+
+
+            <button
+                class="navButton"
+                data-page="featuredPage"
+                onclick="openPage('featuredPage')">
+
+                <span class="navIcon">
+                    ⭐
+                </span>
+
+                Featured
+
+            </button>
+
+
+            <button
+                class="navButton"
+                data-page="communityPage"
+                onclick="openPage('communityPage')">
+
+                <span class="navIcon">
+                    💬
+                </span>
+
+                Community
+
+            </button>
+
+
+            <button
+                class="navButton"
+                data-page="supportPage"
+                onclick="openPage('supportPage')">
+
+                <span class="navIcon">
+                    🛠️
+                </span>
+
+                Support
+
+            </button>
+
+
+            <button
+                class="navButton"
+                data-page="profilePage"
+                onclick="openPage('profilePage')">
+
+                <span class="navIcon">
+                    👤
+                </span>
+
+                Profile
+
+            </button>
+
+        </div>
+
+    </nav>
+
+</div>
+
+
+<!-- =======================================================
+     GAME LAUNCHER
+     ======================================================= -->
+
+<div id="gameLauncher">
+
+    <div class="launcherTop">
+
+        <strong id="launcherGameName">
+            Game
+        </strong>
+
+        <button
+            class="smallButton deleteButton"
+            onclick="exitGame()">
+
+            Exit Game
+
+        </button>
+
+    </div>
+
+
+    <iframe
+        id="gameFrame"
+        class="gameFrame"
+        allowfullscreen>
+    </iframe>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   VR STUDIO JAVASCRIPT
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   ADMIN PASSWORD
+   --------------------------------------------------------- */
+
+const ADMIN_PASSWORD =
+    "VRStudio#Owner2026!";
+
+
+/* ---------------------------------------------------------
+   USER STATE
+   --------------------------------------------------------- */
+
+let currentUser = null;
+let adminMode = false;
+let authMode = "signup";
+
+
+/* ---------------------------------------------------------
+   DEFAULT GAME
+   --------------------------------------------------------- */
+
+const defaultGames = [
+
+    {
+        name: "City Rush",
+
+        url: "",
+
+        description:
+            "Open-world city driving game.",
+
+        featured: true
+
+    }
+
+];
+
+
+/* =========================================================
+   HELPER FUNCTIONS
+   ========================================================= */
+
+function getElement(id) {
+
+    return document.getElementById(id);
+
+}
+
+
+function showToast(message) {
+
+    const toast =
+        document.createElement("div");
+
+    toast.className = "toast";
+
+    toast.textContent = message;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+
+        toast.remove();
+
+    }, 2800);
+
+}
+
+
+/* =========================================================
+   SPLASH SCREEN
+   ========================================================= */
+
+window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+        const splash =
+            getElement("splashScreen");
+
+        splash.style.opacity = "0";
+
+        setTimeout(() => {
+
+            splash.remove();
+
+            getElement("authScreen")
+                .style.display = "flex";
+
+        }, 600);
+
+    }, 2000);
+
+});
+
+
+/* =========================================================
+   AUTH MODE
+   ========================================================= */
+
+function changeAuthMode(mode) {
+
+    authMode = mode;
+
+    getElement("signupTab")
+        .classList.toggle(
+            "active",
+            mode === "signup"
+        );
+
+    getElement("loginTab")
+        .classList.toggle(
+            "active",
+            mode === "login"
+        );
+
+
+    if (mode === "signup") {
+
+        getElement("authTitle")
+            .textContent =
+            "Create Your Account";
+
+        getElement("accountButton")
+            .textContent =
+            "Create Account";
+
+    } else {
+
+        getElement("authTitle")
+            .textContent =
+            "Welcome Back";
+
+        getElement("accountButton")
+            .textContent =
+            "Log In";
+
+    }
+
+}
+
+
+/* =========================================================
+   ACCOUNT SYSTEM
+   ========================================================= */
+
+function handleAccount() {
+
+    const email =
+        getElement("emailInput")
+            .value
+            .trim();
+
+    const password =
+        getElement("passwordInput")
+            .value;
+
+
+    if (!email || !password) {
+
+        showToast(
+            "Please enter your email and password."
+        );
+
+        return;
+
+    }
+
+
+    let users =
+        JSON.parse(
+            localStorage.getItem(
+                "vrStudioUsers"
+            ) || "{}"
+        );
+
+
+    if (authMode === "signup") {
+
+        if (users[email]) {
+
+            showToast(
+                "Account already exists."
+            );
+
+            return;
+
+        }
+
+
+        users[email] = {
+
+            email: email,
+
+            password: password,
+
+            name:
+                email.split("@")[0]
+
+        };
+
+
+        localStorage.setItem(
+            "vrStudioUsers",
+            JSON.stringify(users)
+        );
+
+
+        currentUser = {
+
+            name: users[email].name,
+
+            email: email,
+
+            guest: false
+
+        };
+
+
+        enterApplication();
+
+    }
+
+    else {
+
+        if (
+            !users[email] ||
+            users[email].password !== password
+        ) {
+
+            showToast(
+                "Incorrect email or password."
+            );
+
+            return;
+
+        }
+
+
+        currentUser = {
+
+            name: users[email].name,
+
+            email: email,
+
+            guest: false
+
+        };
+
+
+        enterApplication();
+
+    }
+
+}
+
+
+/* =========================================================
+   GOOGLE
+   ========================================================= */
+
+function googleLogin() {
+
+    showToast(
+        "Google Sign-In needs your Google OAuth setup."
+    );
+
+}
+
+
+/* =========================================================
+   GUEST
+   ========================================================= */
+
+function guestLogin() {
+
+    currentUser = {
+
+        name: "Guest Player",
+
+        email: "guest",
+
+        guest: true
+
+    };
+
+
+    enterApplication();
+
+}
+
+
+/* =========================================================
+   ADMIN SWITCH
+   ========================================================= */
+
+function toggleAdminPassword() {
+
+    const enabled =
+        getElement("adminSwitch").checked;
+
+    getElement("adminPasswordArea")
+        .style.display =
+        enabled
+            ? "block"
+            : "none";
+
+}
+
+
+/* =========================================================
+   ADMIN VERIFICATION
+   ========================================================= */
+
+function verifyAdmin() {
+
+    const enteredPassword =
+        getElement("adminPasswordInput")
+            .value;
+
+
+    if (
+        enteredPassword !==
+        ADMIN_PASSWORD
+    ) {
+
+        showToast(
+            "Wrong admin password. Player mode remains active."
+        );
+
+        return;
+
+    }
+
+
+    adminMode = true;
+
+
+    currentUser = {
+
+        name: "Owner / Admin",
+
+        email: "owner@vrstudio.local",
+
+        guest: false
+
+    };
+
+
+    enterApplication();
+
+
+    showToast(
+        "Owner/Admin Mode Enabled."
+    );
+
+}
+
+
+/* =========================================================
+   ENTER APPLICATION
+   ========================================================= */
+
+function enterApplication() {
+
+    getElement("authScreen")
+        .style.display = "none";
+
+
+    getElement("mainApp")
+        .style.display = "block";
+
+
+    document.body.classList.toggle(
+        "adminMode",
+        adminMode
+    );
+
+
+    getElement("roleBadge")
+        .textContent =
+        adminMode
+            ? "OWNER / ADMIN MODE"
+            : "PLAYER MODE";
+
+
+    updateProfile();
+
+    loadGames();
+
+    loadFeatured();
+
+    loadProjects();
+
+    loadChat();
+
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+function logout() {
+
+    currentUser = null;
+
+    adminMode = false;
+
+
+    document.body.classList.remove(
+        "adminMode"
+    );
+
+
+    getElement("mainApp")
+        .style.display = "none";
+
+
+    getElement("authScreen")
+        .style.display = "flex";
+
+
+    getElement("emailInput")
+        .value = "";
+
+    getElement("passwordInput")
+        .value = "";
+
+    getElement("adminPasswordInput")
+        .value = "";
+
+    getElement("adminSwitch")
+        .checked = false;
+
+    getElement("adminPasswordArea")
+        .style.display = "none";
+
+
+    changeAuthMode("signup");
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function openPage(pageId) {
+
+    if (
+        pageId === "adminPage" &&
+        !adminMode
+    ) {
+
+        showToast(
+            "Owner/Admin verification required."
+        );
+
+        return;
+
+    }
+
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page => {
+
+            page.classList.remove("active");
+
+        });
+
+
+    getElement(pageId)
+        .classList.add("active");
+
+
+    document
+        .querySelectorAll(".navButton")
+        .forEach(button => {
+
+            button.classList.toggle(
+                "active",
+                button.dataset.page === pageId
+            );
+
+        });
+
+
+    window.scrollTo(0, 0);
+
+}
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+function updateProfile() {
+
+    const profile =
+        getElement("profileData");
+
+
+    profile.innerHTML = `
+
+        <div class="profileRow">
+
+            <span>Name</span>
+
+            <strong>
+                ${escapeHTML(currentUser.name)}
+            </strong>
+
+        </div>
+
+
+        <div class="profileRow">
+
+            <span>Email</span>
+
+            <strong>
+                ${escapeHTML(currentUser.email)}
+            </strong>
+
+        </div>
+
+
+        <div class="profileRow">
+
+            <span>Account Type</span>
+
+            <strong>
+                ${
+                    adminMode
+                    ? "Owner / Admin"
+                    : currentUser.guest
+                    ? "Guest Player"
+                    : "Player"
+                }
+            </strong>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   GAME STORAGE
+   ========================================================= */
+
+function getGames() {
+
+    return JSON.parse(
+        localStorage.getItem(
+            "vrStudioGames"
+        ) ||
+        JSON.stringify(defaultGames)
+    );
+
+}
+
+
+function saveGames(games) {
+
+    localStorage.setItem(
+        "vrStudioGames",
+        JSON.stringify(games)
+    );
+
+}
+
+
+/* =========================================================
+   LOAD GAMES
+   ========================================================= */
+
+function loadGames() {
+
+    const games = getGames();
+
+    const list =
+        getElement("gameList");
+
+
+    if (!games.length) {
+
+        list.innerHTML =
+            "<p style='color:#8198AA'>No games published yet.</p>";
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        games
+        .map((game, index) => {
+
+            return `
+
+                <div class="gameCard">
+
+                    <div class="gameInfo">
+
+                        <h3>
+                            ${escapeHTML(game.name)}
+                        </h3>
+
+                        <p>
+                            ${escapeHTML(
+                                game.description ||
+                                "VR Studio Web Game"
+                            )}
+                        </p>
+
+                    </div>
+
+
+                    <div class="gameActions">
+
+                        <span class="badge">
+                            ${
+                                game.featured
+                                ? "FEATURED"
+                                : "GAME"
+                            }
+                        </span>
+
+
+                        ${
+                            game.url
+
+                            ?
+
+                            `<button
+                                class="smallButton"
+                                onclick="launchGame(${index})">
+
+                                Play
+
+                            </button>`
+
+                            :
+
+                            `<button
+                                class="smallButton"
+                                onclick="showToast('Game URL has not been added yet.')">
+
+                                Coming Soon
+
+                            </button>`
+                        }
+
+
+                        ${
+                            adminMode
+
+                            ?
+
+                            `<button
+                                class="smallButton"
+                                onclick="toggleFeatured(${index})">
+
+                                ${
+                                    game.featured
+                                    ? "Unfeature"
+                                    : "Feature"
+                                }
+
+                            </button>
+
+                            <button
+                                class="smallButton deleteButton"
+                                onclick="deleteGame(${index})">
+
+                                Delete
+
+                            </button>`
+
+                            :
+
+                            ""
+
+                        }
+
+                    </div>
+
+                </div>
+
+            `;
+
+        })
+        .join("");
+
+}
+
+
+/* =========================================================
+   FEATURED
+   ========================================================= */
+
+function loadFeatured() {
+
+    const games =
+        getGames()
+        .filter(game => game.featured);
+
+
+    const list =
+        getElement("featuredList");
+
+
+    if (!games.length) {
+
+        list.innerHTML =
+            "<p style='color:#8198AA'>No featured games yet.</p>";
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        games
+        .map(game => {
+
+            return `
+
+                <div class="gameCard">
+
+                    <div class="gameInfo">
+
+                        <h3>
+                            ${escapeHTML(game.name)}
+                        </h3>
+
+                        <p>
+                            ${escapeHTML(
+                                game.description
+                            )}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        })
+        .join("");
+
+}
+
+
+/* =========================================================
+   PUBLISH GAME
+   ========================================================= */
+
+function publishGame() {
+
+    if (!adminMode) {
+
+        showToast(
+            "Admin access required."
+        );
+
+        return;
+
+    }
+
+
+    const name =
+        getElement("gameName")
+            .value
+            .trim();
+
+    const url =
+        getElement("gameURL")
+            .value
+            .trim();
+
+    const description =
+        getElement("gameDescription")
+            .value
+            .trim();
+
+
+    if (!name || !url) {
+
+        showToast(
+            "Enter the game name and URL."
+        );
+
+        return;
+
+    }
+
+
+    const games = getGames();
+
+
+    games.push({
+
+        name: name,
+
+        url: url,
+
+        description:
+            description ||
+            "VR Studio Web Game",
+
+        featured: false
+
+    });
+
+
+    saveGames(games);
+
+
+    getElement("gameName").value = "";
+    getElement("gameURL").value = "";
+    getElement("gameDescription").value = "";
+
+
+    loadGames();
+
+    loadFeatured();
+
+
+    showToast(
+        "Game published successfully."
+    );
+
+}
+
+
+/* =========================================================
+   DELETE GAME
+   ========================================================= */
+
+function deleteGame(index) {
+
+    if (!adminMode) return;
+
+
+    const games = getGames();
+
+
+    games.splice(index, 1);
+
+
+    saveGames(games);
+
+
+    loadGames();
+
+    loadFeatured();
+
+
+    showToast(
+        "Game deleted."
+    );
+
+}
+
+
+/* =========================================================
+   FEATURE GAME
+   ========================================================= */
+
+function toggleFeatured(index) {
+
+    if (!adminMode) return;
+
+
+    const games = getGames();
+
+
+    games[index].featured =
+        !games[index].featured;
+
+
+    saveGames(games);
+
+
+    loadGames();
+
+    loadFeatured();
+
+
+    showToast(
+        games[index].featured
+        ? "Game featured."
+        : "Game removed from Featured."
+    );
+
+}
+
+
+/* =========================================================
+   GAME LAUNCHER
+   ========================================================= */
+
+function launchGame(index) {
+
+    const games = getGames();
+
+    const game = games[index];
+
+
+    if (!game.url) {
+
+        showToast(
+            "This game does not have a URL yet."
+        );
+
+        return;
+
+    }
+
+
+    getElement("launcherGameName")
+        .textContent =
+        game.name;
+
+
+    getElement("gameFrame")
+        .src =
+        game.url;
+
+
+    getElement("gameLauncher")
+        .style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   EXIT GAME
+   ========================================================= */
+
+function exitGame() {
+
+    getElement("gameFrame")
+        .src =
+        "about:blank";
+
+
+    getElement("gameLauncher")
+        .style.display =
+        "none";
+
+}
+
+
+/* =========================================================
+   PROJECT SYSTEM
+   ========================================================= */
+
+function getProjects() {
+
+    return JSON.parse(
+        localStorage.getItem(
+            "vrStudioProjects"
+        ) || "[]"
+    );
+
+}
+
+
+function saveProject() {
+
+    if (!adminMode) return;
+
+
+    const name =
+        getElement("projectName")
+            .value
+            .trim();
+
+    const status =
+        getElement("projectStatus")
+            .value
+            .trim();
+
+
+    if (!name) {
+
+        showToast(
+            "Enter a project name."
+        );
+
+        return;
+
+    }
+
+
+    const projects =
+        getProjects();
+
+
+    projects.push({
+
+        name: name,
+
+        status:
+            status ||
+            "In Development"
+
+    });
+
+
+    localStorage.setItem(
+        "vrStudioProjects",
+        JSON.stringify(projects)
+    );
+
+
+    getElement("projectName").value = "";
+    getElement("projectStatus").value = "";
+
+
+    loadProjects();
+
+
+    showToast(
+        "Project saved."
+    );
+
+}
+
+
+/* =========================================================
+   LOAD PROJECTS
+   ========================================================= */
+
+function loadProjects() {
+
+    const projects =
+        getProjects();
+
+
+    const list =
+        getElement("projectList");
+
+
+    if (!projects.length) {
+
+        list.innerHTML =
+            "<p style='color:#8198AA'>No upcoming projects.</p>";
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        projects
+        .map(project => {
+
+            return `
+
+                <div class="gameCard">
+
+                    <div class="gameInfo">
+
+                        <h3>
+                            ${escapeHTML(project.name)}
+                        </h3>
+
+                        <p>
+                            ${escapeHTML(project.status)}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        })
+        .join("");
+
+}
+
+
+/* =========================================================
+   COMMUNITY CHAT
+   ========================================================= */
+
+function getMessages() {
+
+    return JSON.parse(
+        localStorage.getItem(
+            "vrStudioChat"
+        ) || "[]"
+    );
+
+}
+
+
+function sendMessage() {
+
+    const input =
+        getElement("chatInput");
+
+
+    const message =
+        input.value.trim();
+
+
+    if (!message) return;
+
+
+    const messages =
+        getMessages();
+
+
+    messages.push({
+
+        name:
+            currentUser
+            ? currentUser.name
+            : "Player",
+
+        message: message,
+
+        time:
+            new Date()
+            .toLocaleTimeString()
+
+    });
+
+
+    localStorage.setItem(
+        "vrStudioChat",
+        JSON.stringify(messages)
+    );
+
+
+    input.value = "";
+
+
+    loadChat();
+
+}
+
+
+/* =========================================================
+   LOAD CHAT
+   ========================================================= */
+
+function loadChat() {
+
+    const messages =
+        getMessages();
+
+
+    const box =
+        getElement("chatMessages");
+
+
+    if (!messages.length) {
+
+        box.innerHTML = `
+
+            <div class="chatMessage">
+
+                <strong>
+                    VR Studio
+                </strong>
+
+                <small>
+                    Welcome
+                </small>
+
+                <div>
+                    Welcome to the VR Studio
+                    Community Lounge!
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+        messages
+        .map(message => {
+
+            return `
+
+                <div class="chatMessage">
+
+                    <strong>
+                        ${escapeHTML(message.name)}
+                    </strong>
+
+                    <small>
+                        ${escapeHTML(message.time)}
+                    </small>
+
+                    <div>
+                        ${escapeHTML(message.message)}
+                    </div>
+
+                </div>
+
+            `;
+
+        })
+        .join("");
+
+
+    box.scrollTop =
+        box.scrollHeight;
+
+}
+
+
+/* =========================================================
+   SUPPORT
+   ========================================================= */
+
+function sendSupport() {
+
+    const type =
+        getElement("supportType")
+            .value;
+
+    const message =
+        getElement("supportMessage")
+            .value
+            .trim();
+
+
+    if (!message) {
+
+        showToast(
+            "Please write your support message."
+        );
+
+        return;
+
+    }
+
+
+    const requests =
+        JSON.parse(
+            localStorage.getItem(
+                "vrStudioSupport"
+            ) || "[]"
+        );
+
+
+    requests.push({
+
+        type: type,
+
+        message: message,
+
+        user:
+            currentUser
+            ? currentUser.email
+            : "guest",
+
+        date:
+            new Date().toISOString()
+
+    });
+
+
+    localStorage.setItem(
+        "vrStudioSupport",
+        JSON.stringify(requests)
+    );
+
+
+    getElement("supportMessage")
+        .value = "";
+
+
+    showToast(
+        "Support request submitted."
+    );
+
+}
+
+
+/* =========================================================
+   SECURITY HELPER
+   ========================================================= */
+
+function escapeHTML(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+</script>
+
+</body>
+</html>and 
